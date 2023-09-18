@@ -6,7 +6,6 @@ const UserModal = new mongoose.Schema(
     clerkid: {
       type: String,
       unique: true,
-      required: true,
     },
     username: {
       type: String,
@@ -32,6 +31,11 @@ const UserModal = new mongoose.Schema(
     },
     photourl: {
       type: String,
+    },
+    coverphotourl: {
+      type: String,
+      default:
+        "https://theoheartist.com/wp-content/uploads/sites/2/2015/01/fbdefault.png",
     },
     dob: {
       type: String,
@@ -72,7 +76,7 @@ const UserModal = new mongoose.Schema(
 );
 
 export const UserSchema = Joi.object({
-  clerkid: Joi.string().required(),
+  clerkid: Joi.string(),
   username: Joi.string().required().min(3),
   firstname: Joi.string().required().min(3).max(30),
   lastname: Joi.string().required().min(3).max(30),

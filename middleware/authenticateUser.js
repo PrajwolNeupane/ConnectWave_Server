@@ -11,6 +11,11 @@ const authenticateUser = async (req, res, next) => {
       }
       req.token = decode;
       next();
+    } else {
+      return res.status(403).send({
+        message: "Forbidden",
+        sucess: false,
+      });
     }
   } catch (e) {
     console.log(e);

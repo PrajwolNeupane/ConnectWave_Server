@@ -3,9 +3,10 @@ import http from "http";
 import { Server } from "socket.io";
 import DBConnection from "./helper/DBConnection.js";
 import cors from "cors";
-import AuthRoute from "./routes/auth.routes.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import AuthRoute from "./routes/auth.routes.js";
+import UserRoute from "./routes/user.routes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +27,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", AuthRoute);
+app.use("/profile", UserRoute);
+// app.use('/');
 
 io.on("connection", (socket) => {
   console.log("Connected to web socket");
