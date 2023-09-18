@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import Joi from "joi";
 
-const UserSchema = new mongoose.Schema(
+const UserModal = new mongoose.Schema(
   {
     clerkid: {
       type: String,
@@ -70,5 +71,19 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.models.UserSchema || mongoose.model("User", UserSchema);
+export const UserSchema = Joi.object({
+  clerkid: Joi.string().required(),
+  username: Joi.string().required().min(3),
+  firstname: Joi.string().required().min(3).max(30),
+  lastname: Joi.string().required().min(3).max(30),
+  email: Joi.string().email().required(),
+  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
+  dob: Joi.string().required(),
+  gender:Joi.string().required(),
+  photourl: Joi.string(),
+  phone: Joi.string(),
+  description: Joi.string(),
+});
+
+const User = mongoose.models.UserModal || mongoose.model("User", UserModal);
 export default User;
