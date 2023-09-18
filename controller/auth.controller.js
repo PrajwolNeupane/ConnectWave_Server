@@ -7,10 +7,9 @@ import "dotenv/config";
 //Get User
 export const getUserInfo = async (req, res) => {
   try {
-    const user = await User.findById(req.token.id).select([
-      "-password",
-      "-__v",
-    ]);
+    const user = await User.findById(req.token.id)
+      .select(["-password", "-__v"])
+      .populate("posts", "-creater");
     res.send({
       message: "User Authenticate",
       success: true,

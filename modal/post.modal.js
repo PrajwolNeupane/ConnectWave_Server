@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
-import Joi from "joi";
 
 const PostModal = new mongoose.Schema(
   {
+    creater: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     imageUrl: [
       {
         url: {
@@ -37,3 +41,5 @@ const PostModal = new mongoose.Schema(
     timestamps: true,
   }
 );
+const Post = mongoose.models.PostModal || mongoose.model("Post", PostModal);
+export default Post;
