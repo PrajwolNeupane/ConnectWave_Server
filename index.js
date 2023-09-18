@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import AuthRoute from "./routes/auth.routes.js";
 import UserRoute from "./routes/user.routes.js";
+import PostRoute from "./routes/post.routes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -28,7 +29,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", AuthRoute);
 app.use("/profile", UserRoute);
-// app.use('/');
+app.use("/post", PostRoute);
 
 io.on("connection", (socket) => {
   console.log("Connected to web socket");
