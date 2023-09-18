@@ -1,7 +1,22 @@
 import "dotenv/config";
 import User from "../modal/user.modal.js";
 import bcrypt from "bcrypt";
+import { initializeApp } from "firebase/app";
+import config from "../helper/firebase.config.js";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
+//Intializing
+const storage = getStorage(
+  initializeApp(config.firebaseConfig),
+  process.env.STORAGE_URL
+);
+
+//Edit Usder Profile
 export const editUserProfile = async (req, res) => {
   try {
     var user = await User.findById(req.token.id).select(["-password", "-__v"]);
@@ -37,6 +52,7 @@ export const editUserProfile = async (req, res) => {
   }
 };
 
+//Edit user Password
 export const updatePassword = async (req, res) => {
   try {
     var user = await User.findById(req.token.id).select(["-__v"]);
@@ -57,6 +73,94 @@ export const updatePassword = async (req, res) => {
     ]);
     return res.send({
       message: "User Password Updated",
+      success: true,
+      user: updatedUser,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send({
+      message: "Server Error",
+      sucess: false,
+    });
+  }
+};
+
+//Edit User Profile Photo
+export const updateProfilePhoto = async (req, res) => {
+  const storage = getStorage();
+  var photoURL;
+  try {
+    if (req.file.size > 200 * 1024) {
+      return res.status(400).send({
+        message: "File size exceeds the limit of 200KB",
+        success: false,
+      });
+    }
+    var user = await User.findById(req.token.id).select(["-__v", "-password"]);
+    const fileRef = ref(storage, req.token.id + "-profilephoto.png");
+    const metadata = {
+      contentType: req.file.mimetype,
+      photoOf: `${user.firstname} ${user.lastname}`,
+      date: Date.now(),
+    };
+    const snapshot = await uploadBytesResumable(
+      fileRef,
+      req?.file.buffer,
+      metadata
+    );
+    photoURL = await getDownloadURL(snapshot.ref);
+    user.photourl = photoURL;
+    await user.save();
+    const updatedUser = await User.findById(req.token.id).select([
+      "-password",
+      "-__v",
+    ]);
+    res.send({
+      message: "User Profile Photo Updated",
+      success: true,
+      user: updatedUser,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send({
+      message: "Server Error",
+      sucess: false,
+    });
+  }
+};
+
+//Edit User Cover Photo
+export const updateCoverPhoto = async (req, res) => {
+  const storage = getStorage();
+  var photoURL;
+  try {
+    if (req.file.size > 400 * 1024) {
+      return res.status(400).send({
+        message: "File size exceeds the limit of 400KB",
+        success: false,
+      });
+    }
+    var user = await User.findById(req.token.id).select(["-__v", "-password"]);
+    const fileRef = ref(storage, req.token.id + "-coverphoto.png");
+    const metadata = {
+      contentType: req.file.mimetype,
+      photoOf: `${user.firstname} ${user.lastname}`,
+      date: Date.now(),
+    };
+    const snapshot = await uploadBytesResumable(
+      fileRef,
+      req?.file.buffer,
+      metadata
+    );
+    photoURL = await getDownloadURL(snapshot.ref);
+    user.coverphotourl = photoURL;
+    await user.save();
+    const updatedUser = await User.findById(req.token.id).select([
+      "-password",
+      "-__v",
+    ]);
+    res.send({
+      message: "User Profile Photo Updated",
       success: true,
       user: updatedUser,
     });
