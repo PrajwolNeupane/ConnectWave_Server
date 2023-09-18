@@ -5,12 +5,14 @@ import DBConnection from "./helper/DBConnection.js";
 import cors from "cors";
 import AuthRoute from "./routes/auth.routes.js";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const port = process.env.PORT || 8000;
 
+app.use(cookieParser());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(
