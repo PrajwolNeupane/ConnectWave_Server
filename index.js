@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
+import DBConnection from "./helper/DBConnection.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -11,11 +12,14 @@ app.get("/", (req, res) => {
   res.send("Hello from the server");
 });
 
-app.listen(port, () => [console.log(`Listening to port ${port}`)]);
-
 io.on("connection", (socket) => {
   console.log("Connected to web socket");
   io.on("disconnect", (socket) => {
     console.log("A user disconnected");
   });
+});
+
+server.listen(port, async () => {
+  console.log(`Listening to port ${port}`);
+  await DBConnection;
 });
