@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 
 const authenticateUser = async (req, res, next) => {
-  const cookies = req.cookies.token;;
+  const cookies = req.cookies.token;
   try {
     if (cookies) {
       const decode = jwt.verify(cookies, process.env.JWT_KEY);
@@ -14,6 +14,10 @@ const authenticateUser = async (req, res, next) => {
     }
   } catch (e) {
     console.log(e);
+    return res.status(500).send({
+      message: "Server Error",
+      sucess: false,
+    });
   }
 };
 

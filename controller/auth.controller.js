@@ -1,4 +1,4 @@
-import User, { UserSchema } from "../modal/user.modal.js";
+import User, { UserSchema, UserLoginSchema } from "../modal/user.modal.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import photoGenerator from "../helper/photoGenerator.js";
@@ -59,6 +59,55 @@ export const createUser = async (req, res) => {
       message: "User Created",
       success: true,
     });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send({
+      message: "Server Error",
+      sucess: false,
+    });
+  }
+};
+
+//Login User
+export const loginUser = async (req, res) => {
+  const { error } = UserLoginSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+  try {
+    var user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(401).send({
+        message: "Invalid Credentials",
+        sucess: false,
+      });
+    }
+    const validity = await bcrypt.compare(req.body.password, user.password);
+    if (!validity) {
+      return res.status(401).send({
+        message: "Invalid Credentials",
+        sucess: false,
+      });
+    } else {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_KEY);
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 9000000,
+      });
+      return res.status(200).json({ message: "User Logged In", success: true });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send({
+      message: "Server Error",
+      sucess: false,
+    });
+  }
+};
+
+//Logout
+export const logOut = async (req, res) => {
+  try {
   } catch (e) {
     console.log(e);
     return res.status(500).send({
