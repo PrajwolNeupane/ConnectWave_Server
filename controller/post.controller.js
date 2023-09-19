@@ -16,6 +16,24 @@ const storage = getStorage(
   process.env.STORAGE_URL
 );
 
+//Get Post
+export const getPost = async (req, res) => {
+  try {
+    var post = await Post.find().limit(10);
+    res.send({
+      message: "Feeding Post",
+      sucess: true,
+      post: post,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send({
+      message: "Server Error",
+      sucess: false,
+    });
+  }
+};
+
 //Upload Post
 export const uploadPost = async (req, res) => {
   const storage = getStorage();
