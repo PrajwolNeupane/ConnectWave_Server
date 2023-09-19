@@ -3,7 +3,7 @@ import authenticateUser from "../middleware/authenticateUser.js";
 import multer from "multer";
 import { uploadPost } from "../controller/post.controller.js";
 
-const upload = multer().single("image");
+const upload = multer().array('images')
 
 const router = express.Router();
 
