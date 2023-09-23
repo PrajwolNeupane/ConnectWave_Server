@@ -81,10 +81,8 @@ export const UserSchema = Joi.object({
   firstname: Joi.string().required().min(3).max(30),
   lastname: Joi.string().required().min(3).max(30),
   email: Joi.string().email().required(),
-  password: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
-    .min(8)
-    .required(),
+  password: Joi.string().min(8).required(),
+  confirmpassword: Joi.ref("password"),
   dob: Joi.string().required(),
   gender: Joi.string().required(),
   photourl: Joi.string(),
