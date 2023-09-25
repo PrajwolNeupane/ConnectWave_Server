@@ -8,7 +8,6 @@ import {
 import authenticateUser from "../middleware/authenticateUser.js";
 
 const router = express.Router();
-
 router.get("/me", authenticateUser, getUserInfo);
 router.post("/signup", createUser);
 router.post("/login", loginUser);

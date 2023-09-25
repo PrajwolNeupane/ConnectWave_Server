@@ -19,7 +19,7 @@ export const getUserInfo = async (req, res) => {
     console.log(e);
     return res.status(500).send({
       message: "Server Error",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -62,7 +62,7 @@ export const createUser = async (req, res) => {
     console.log(e);
     return res.status(500).send({
       message: "Server Error",
-      sucess: false,
+      success: false,
     });
   }
 };
@@ -78,14 +78,14 @@ export const loginUser = async (req, res) => {
     if (!user) {
       return res.status(401).send({
         message: "Invalid Credentials",
-        sucess: false,
+        success: false,
       });
     }
     const validity = await bcrypt.compare(req.body.password, user.password);
     if (!validity) {
       return res.status(401).send({
         message: "Invalid Credentials",
-        sucess: false,
+        success: false,
       });
     } else {
       const token = jwt.sign({ id: user._id }, process.env.JWT_KEY);
@@ -99,7 +99,7 @@ export const loginUser = async (req, res) => {
     console.log(e);
     return res.status(500).send({
       message: "Server Error",
-      sucess: false,
+      success: false,
     });
   }
 };
