@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createUser,
+  getCertainUserInfo,
   getUserInfo,
   logOut,
   loginUser,
@@ -9,6 +10,7 @@ import authenticateUser from "../middleware/authenticateUser.js";
 
 const router = express.Router();
 router.get("/me", authenticateUser, getUserInfo);
+router.get("/:id", getCertainUserInfo);
 router.post("/signup", createUser);
 router.post("/login", loginUser);
 router.get("/logout", authenticateUser, logOut);

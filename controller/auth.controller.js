@@ -24,6 +24,26 @@ export const getUserInfo = async (req, res) => {
   }
 };
 
+//Get Certain User
+export const getCertainUserInfo = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.id })
+      .select(["-password", "-__v"])
+      .populate("posts", "-creater");
+    res.send({
+      message: "User Authenticate",
+      success: true,
+      user: user,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send({
+      message: "Server Error",
+      success: false,
+    });
+  }
+};
+
 //Create User
 export const createUser = async (req, res) => {
   const { error, value } = UserSchema.validate(req.body);
